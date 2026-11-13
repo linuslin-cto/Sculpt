@@ -1,4 +1,4 @@
-// Copyright 2026 Google LLC
+// Copyright 2026 The Sculpt Authors
 // Licensed under the Apache License, Version 2.0
 
 // Package judge measures the run that selection chose, after it chose it.

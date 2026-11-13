@@ -1,4 +1,4 @@
-// Copyright 2026 Google LLC
+// Copyright 2026 The Sculpt Authors
 // Licensed under the Apache License, Version 2.0
 
 package main
@@ -15,6 +15,7 @@ import (
 	"sculpt/benchmarks/jobbench"
 	"sculpt/benchmarks/lab"
 	"sculpt/benchmarks/workbuddy"
+	"sculpt/core/eval"
 	"sculpt/core/judge"
 	"sculpt/core/report"
 	"sculpt/core/schedule"
@@ -120,6 +121,25 @@ func main() {
 	}
 	if spend > 0 {
 		fmt.Printf("\n  improver (editors, composer, selection, reflection) spend across reported modes: $%.2f\n", spend)
+	}
+
+	// Base→refined delta when --bases has been run (experiment-guide parity).
+	var baseRows []eval.BaseRow
+	for _, k := range ks {
+		ns := schedule.NS(adapter.Spec().Name, adapter.Substrate().Name(), "agg", k, seed, "")
+		got, err := eval.LoadBaseRows(filepath.Join(adapter.Spec().RunsRoot, ns, "base_judged.json"))
+		if err != nil {
+			fatal(err)
+		}
+		baseRows = append(baseRows, got...)
+	}
+	if len(baseRows) > 0 {
+		comps := eval.Compare(baseRows, rows, fellBack, usd, adapter.Spec().Name)
+		block := eval.RenderBaseDelta(comps, "Base → refined (self-evolution)", adapter.Spec().Name)
+		if block != "" {
+			fmt.Println()
+			fmt.Println(block)
+		}
 	}
 }
 

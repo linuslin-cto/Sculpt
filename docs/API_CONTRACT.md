@@ -1,6 +1,6 @@
 # Sculpt API contract
 
-Critical invariants for the Go framework (aligned with the Harness² method):
+Critical invariants for the Go framework (aligned with the recursive harnessing method):
 
 1. **Budget identity** — each mode runs with `R = 4k` rollouts and `P = 3k`
    improver sessions per task.

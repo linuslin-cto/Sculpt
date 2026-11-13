@@ -1,4 +1,4 @@
-// Copyright 2026 Google LLC
+// Copyright 2026 The Sculpt Authors
 // Licensed under the Apache License, Version 2.0
 
 // Package config holds deployment settings. Shell env overrides .env.
@@ -189,7 +189,7 @@ func envInt(name string, def int) int {
 }
 
 // LoadDotEnv loads KEY=VAL pairs from path into the process environment.
-// Existing shell variables win (upstream Harness² config parity).
+// Existing shell variables win (upstream config parity).
 func LoadDotEnv(path string) {
 	f, err := os.Open(path)
 	if err != nil {

@@ -1,4 +1,4 @@
-// Copyright 2026 Google LLC
+// Copyright 2026 The Sculpt Authors
 // Licensed under the Apache License, Version 2.0
 
 package jobbench
@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"sculpt/internal/config"
+	"sculpt/internal/runnerenv"
 	"sculpt/substrate"
 )
 
@@ -64,8 +65,7 @@ func (a *Adapter) launchOpenCodeRunner(req substrate.RunRequest, install substra
 		"TASK_IDS="+taskID,
 		"LABEL="+label,
 		"SCULPT_RENDER_DIR="+render,
-		// Upstream Python runners still read this name.
-		"HARNESS_RENDER_DIR="+render,
+		runnerenv.RenderDir+"="+render,
 		"AGENT_NAME=",
 		"TASKS_BASE_DIR="+a.Store,
 		"OPENCODE_DIR="+config.OpenCodeDir,
@@ -120,15 +120,14 @@ func (a *Adapter) launchCodexRunner(req substrate.RunRequest, install substrate.
 		"TASK_IDS="+taskID,
 		"LABEL="+label,
 		"SCULPT_RENDER_DIR="+render,
-		// Upstream Python runners still read this name.
-		"HARNESS_RENDER_DIR="+render,
+		runnerenv.RenderDir+"="+render,
 		"TASKS_BASE_DIR="+a.Store,
 		"BENCHMARK_MODELS="+model,
 		"MAX_CONCURRENT_PER_MODEL=1",
 		"TIMEOUT_PER_TASK="+fmt.Sprintf("%d", wall),
 		"CODEX_HOME="+codexHome,
 		"SCULPT_CODEX_BIN="+filepath.Join(config.CodexDist(), "codex"),
-		"HARNESS2_CODEX_BIN="+filepath.Join(config.CodexDist(), "codex"),
+		runnerenv.CodexBin+"="+filepath.Join(config.CodexDist(), "codex"),
 	)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(wall+600)*time.Second)
 	defer cancel()

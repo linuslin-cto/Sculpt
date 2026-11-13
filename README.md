@@ -5,7 +5,7 @@ fixed-weight model (prompts, tools, memory, scripts) through
 **Propose–Probe–Compose**, then persist adopted harnesses and lessons for the
 next task.
 
-Inspired by the method in [Harness²](https://github.com/google-research/harness2)
+Inspired by the method in [google-research/harness2](https://github.com/google-research/harness2)
 ([paper](https://arxiv.org/pdf/2610.14224)). Sculpt is a separate Go project —
 binaries, env vars, and packages use the `sculpt` / `SCULPT_*` names.
 
@@ -13,8 +13,9 @@ binaries, env vars, and packages use the `sculpt` / `SCULPT_*` names.
 
 Offline demo and core method (tree, ledger, recursion, selection, schedule,
 library, judge) are green, including resume / selection-failure / rejudge-merge.
-Self-evolution is checked by `TestSelfEvolutionProposeProbeCompose`: buggy base
-→ correct signed totals after one PPC step, with library persistence.
+Self-evolution is checked by `TestSelfEvolution*`: buggy base → correct totals,
+library persistence, and scored **base 0% → refined 100% (+100 pt)** via
+`sculpt-judge` / `--bases` / `sculpt-report`. See [docs/EVAL.md](docs/EVAL.md).
 CLI covers dry-run sweep, judge, and report. JobBench / LAB / WorkBuddy adapters
 are wired; live Execute still needs OpenCode/Codex checkouts and credentials.
 
@@ -73,7 +74,19 @@ The offline demo is the same evaluation shape as the upstream paper demo:
 3. **Harnessing-level** — adopted harness + experience land in `library/` and
    transfer to the next task in the domain stream.
 
-`go test ./demo -run TestSelfEvolution` asserts all three.
+`go test ./demo -run TestSelfEvolution` asserts adoption and scoring.
+
+Scoring pipeline (experiment-guide parity):
+
+```bash
+go run ./cmd/sculpt-demo --output runs/demo --k 1
+go run ./cmd/sculpt-judge --bench demo --output runs/demo --k 1
+go run ./cmd/sculpt-judge --bench demo --output runs/demo --k 1 --bases
+go run ./cmd/sculpt-report --bench demo --output runs/demo --k 1
+```
+
+Paper reference peaks for live benches (qualitative): WorkBuddy +11.5, JobBench
++4.5, LAB +11.8 pp partial — see `eval.PaperGains` / `docs/EVAL.md`.
 
 ## License
 

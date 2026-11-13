@@ -1,4 +1,4 @@
-// Copyright 2026 Google LLC
+// Copyright 2026 The Sculpt Authors
 // Licensed under the Apache License, Version 2.0
 
 // Package library stores per-domain adopted harnesses and lessons.

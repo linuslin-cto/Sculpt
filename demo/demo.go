@@ -1,4 +1,4 @@
-// Copyright 2026 Google LLC
+// Copyright 2026 The Sculpt Authors
 // Licensed under the Apache License, Version 2.0
 
 // Package demo provides a deterministic local adapter for the adaptation workflow.
@@ -151,8 +151,27 @@ func (a *Adapter) DeliverableFiles(runDir string) map[string]string {
 	return map[string]string{"answer.txt": a.DeliverableText(runDir)}
 }
 
+// Score grades a demo run against the signed ledger total (1 criterion).
+// Matches the upstream offline judge shape: n_passed / n_criteria / all_pass.
 func (a *Adapter) Score(runDir, taskID string) (map[string]any, error) {
-	return nil, nil
+	want, err := signedTotal(filepath.Join(a.TaskFiles(taskID), "ledger.csv"))
+	if err != nil {
+		return nil, err
+	}
+	got := strings.TrimSpace(a.DeliverableText(runDir))
+	expect := fmt.Sprintf("Total: %.2f", want)
+	passed := 0
+	if got == expect {
+		passed = 1
+	}
+	return map[string]any{
+		"n_passed":   passed,
+		"n_criteria": 1,
+		"all_pass":   passed == 1,
+		"metric":     "exact",
+		"expected":   expect,
+		"got":        got,
+	}, nil
 }
 
 // Proposer applies scripted edits and selection with no model service.

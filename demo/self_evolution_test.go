@@ -12,7 +12,7 @@ import (
 	"sculpt/demo"
 )
 
-// TestSelfEvolutionProposeProbeCompose mirrors the upstream Harness² offline
+// TestSelfEvolutionProposeProbeCompose mirrors the upstream offline
 // evaluation contract: a buggy base harness is refined without ground-truth
 // feedback into a correct deliverable, then experience is stored for the
 // next task (task-level + harnessing-level recursion).
