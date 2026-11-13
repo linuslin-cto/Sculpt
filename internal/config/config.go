@@ -21,34 +21,34 @@ var (
 	DefaultProposerChannel = "opencode"
 	// ProposerModelByChannel maps channel -> default model id.
 	ProposerModelByChannel = map[string]string{
-		"opencode":   env("HARNESS2_IMPROVER_MODEL", ""),
-		"claude_cli": env("HARNESS2_CLAUDE_MODEL", ""),
+		"opencode":   env("SCULPT_IMPROVER_MODEL", ""),
+		"claude_cli": env("SCULPT_CLAUDE_MODEL", ""),
 	}
 	// PhaseWidth is the default concurrent width for propose/rollout phases (Python default: 2).
-	PhaseWidth = envInt("HARNESS2_PHASE_WIDTH", 2)
+	PhaseWidth = envInt("SCULPT_PHASE_WIDTH", 2)
 	// TransportAttempts is proposer transport retries.
-	TransportAttempts = envInt("HARNESS2_TRANSPORT_ATTEMPTS", 2)
+	TransportAttempts = envInt("SCULPT_TRANSPORT_ATTEMPTS", 2)
 	// RunsDir is the results root.
-	RunsDir = env("HARNESS2_RUNS_DIR", "")
+	RunsDir = env("SCULPT_RUNS_DIR", "")
 	// DependenciesDir holds cloned benchmark / OpenCode checkouts (Python: dependencies/).
 	DependenciesDir = ""
 	// OpenCodeDir is the OpenCode monorepo used by bun (Python: config.OPENCODE_DIR).
 	OpenCodeDir = env("OPENCODE_DIR", "")
 	// Bun is the bun binary (Python: config.BUN); empty means look up "bun" on PATH.
-	Bun = env("HARNESS2_BUN", "")
+	Bun = env("SCULPT_BUN", "")
 )
 
 func init() {
 	LoadDotEnv(".env")
 	// refresh after dotenv
-	ProposerModelByChannel["opencode"] = env("HARNESS2_IMPROVER_MODEL", ProposerModelByChannel["opencode"])
-	ProposerModelByChannel["claude_cli"] = env("HARNESS2_CLAUDE_MODEL", ProposerModelByChannel["claude_cli"])
+	ProposerModelByChannel["opencode"] = env("SCULPT_IMPROVER_MODEL", ProposerModelByChannel["opencode"])
+	ProposerModelByChannel["claude_cli"] = env("SCULPT_CLAUDE_MODEL", ProposerModelByChannel["claude_cli"])
 	wd, _ := os.Getwd()
 	if RunsDir == "" {
 		RunsDir = filepath.Join(wd, "runs")
 	}
 	if DependenciesDir == "" {
-		DependenciesDir = env("HARNESS2_DEPENDENCIES", filepath.Join(wd, "dependencies"))
+		DependenciesDir = env("SCULPT_DEPENDENCIES", filepath.Join(wd, "dependencies"))
 	}
 	if OpenCodeDir == "" {
 		OpenCodeDir = filepath.Join(DependenciesDir, "opencode")
@@ -59,8 +59,8 @@ func init() {
 			Bun = "bun"
 		}
 	}
-	PhaseWidth = envInt("HARNESS2_PHASE_WIDTH", PhaseWidth)
-	TransportAttempts = envInt("HARNESS2_TRANSPORT_ATTEMPTS", TransportAttempts)
+	PhaseWidth = envInt("SCULPT_PHASE_WIDTH", PhaseWidth)
+	TransportAttempts = envInt("SCULPT_TRANSPORT_ATTEMPTS", TransportAttempts)
 }
 
 // JbRepo is the job-bench-eval checkout root.
@@ -79,7 +79,7 @@ func OpenCodeEntry() string {
 
 // CodexDist is the Codex CLI dist directory.
 func CodexDist() string {
-	if v := env("HARNESS2_CODEX_DIST", ""); v != "" {
+	if v := env("SCULPT_CODEX_DIST", ""); v != "" {
 		return v
 	}
 	return filepath.Join(DependenciesDir, "codex", "dist")
@@ -95,13 +95,13 @@ func CodexHome() string {
 
 // JbRunnerDir is third_party/jb_runner (baseline harnesses + codex shell launcher).
 func JbRunnerDir() string {
-	if v := env("HARNESS2_JB_RUNNER_DIR", ""); v != "" {
+	if v := env("SCULPT_JB_RUNNER_DIR", ""); v != "" {
 		return v
 	}
 	wd, _ := os.Getwd()
 	candidates := []string{
-		filepath.Join(wd, "harness2", "third_party", "jb_runner"),
 		filepath.Join(wd, "third_party", "jb_runner"),
+		filepath.Join(wd, "upstream", "third_party", "jb_runner"),
 	}
 	for _, c := range candidates {
 		if fi, err := os.Stat(c); err == nil && fi.IsDir() {
@@ -111,15 +111,15 @@ func JbRunnerDir() string {
 	return candidates[0]
 }
 
-// JbOpenCodeRunner is the Python jb_opencode_runner.py path (env or harness2 reference tree).
+// JbOpenCodeRunner is the Python jb_opencode_runner.py path (env or optional upstream checkout).
 func JbOpenCodeRunner() string {
-	if v := env("HARNESS2_JB_OC_RUNNER", ""); v != "" {
+	if v := env("SCULPT_JB_OC_RUNNER", ""); v != "" {
 		return v
 	}
 	wd, _ := os.Getwd()
 	candidates := []string{
-		filepath.Join(wd, "harness2", "harness2", "benchmarks", "jb_opencode_runner.py"),
-		filepath.Join(wd, "harness2", "benchmarks", "jb_opencode_runner.py"),
+		filepath.Join(wd, "third_party", "jb_opencode_runner.py"),
+		filepath.Join(wd, "upstream", "benchmarks", "jb_opencode_runner.py"),
 	}
 	for _, c := range candidates {
 		if fi, err := os.Stat(c); err == nil && !fi.IsDir() {
@@ -131,7 +131,7 @@ func JbOpenCodeRunner() string {
 
 // JbCodexRunner is the bash Codex launcher under jb_runner.
 func JbCodexRunner() string {
-	if v := env("HARNESS2_JB_CX_RUNNER", ""); v != "" {
+	if v := env("SCULPT_JB_CX_RUNNER", ""); v != "" {
 		return v
 	}
 	return filepath.Join(JbRunnerDir(), "run_benchmark_codex_cli_adapt.sh")
@@ -147,23 +147,23 @@ func JbBaseHarness(substrate string) string {
 }
 
 // SolverModelOC is the OpenCode solver model id.
-func SolverModelOC() string { return env("HARNESS2_SOLVER_MODEL", env("HARNESS2_IMPROVER_MODEL", "")) }
+func SolverModelOC() string { return env("SCULPT_SOLVER_MODEL", env("SCULPT_IMPROVER_MODEL", "")) }
 
 // SolverModelCX is the Codex solver model id.
-func SolverModelCX() string { return env("HARNESS2_SOLVER_MODEL_CX", env("HARNESS2_SOLVER_MODEL", "")) }
+func SolverModelCX() string { return env("SCULPT_SOLVER_MODEL_CX", env("SCULPT_SOLVER_MODEL", "")) }
 
 // JbJudgeModel is the JobBench judge model id.
-func JbJudgeModel() string { return env("HARNESS2_JUDGE_MODEL", "judge/stub") }
+func JbJudgeModel() string { return env("SCULPT_JUDGE_MODEL", "judge/stub") }
 
 // JbJudgeAPIBase is the judge OpenAI-compatible API base URL.
-func JbJudgeAPIBase() string { return env("HARNESS2_JUDGE_BASE_URL", "") }
+func JbJudgeAPIBase() string { return env("SCULPT_JUDGE_BASE_URL", "") }
 
 // JbJudgeAPIKey is an optional static judge API key.
-func JbJudgeAPIKey() string { return env("HARNESS2_JUDGE_API_KEY", "") }
+func JbJudgeAPIKey() string { return env("SCULPT_JUDGE_API_KEY", "") }
 
 // JbJudgePython is the venv python used for JobBench judging.
 func JbJudgePython() string {
-	if v := env("HARNESS2_JB_JUDGE_PYTHON", ""); v != "" {
+	if v := env("SCULPT_JB_JUDGE_PYTHON", ""); v != "" {
 		return v
 	}
 	return filepath.Join(JbRepo(), ".venv", "bin", "python")
@@ -189,7 +189,7 @@ func envInt(name string, def int) int {
 }
 
 // LoadDotEnv loads KEY=VAL pairs from path into the process environment.
-// Existing shell variables win (Python harness2.config parity).
+// Existing shell variables win (upstream Harness² config parity).
 func LoadDotEnv(path string) {
 	f, err := os.Open(path)
 	if err != nil {

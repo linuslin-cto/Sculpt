@@ -81,7 +81,7 @@ func (Codex) Preflight() error {
 	if _, err := exec.LookPath("codex"); err == nil {
 		return nil
 	}
-	return fmt.Errorf("Codex CLI missing at %s and not on PATH (set HARNESS2_CODEX_DIST)", bin)
+	return fmt.Errorf("Codex CLI missing at %s and not on PATH (set SCULPT_CODEX_DIST)", bin)
 }
 
 // CodexSurface mirrors Python CODEX_SURFACE.

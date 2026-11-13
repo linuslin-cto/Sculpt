@@ -94,7 +94,7 @@ func Discover(bench, subset, rootOverride string) (map[string]string, error) {
 		return nil, fmt.Errorf("unknown benchmark/subset: %s/%s", bench, subset)
 	}
 	if len(tasks) == 0 {
-		return nil, fmt.Errorf("no %s tasks found at %s; run harness2-setup %s", bench, root, bench)
+		return nil, fmt.Errorf("no %s tasks found at %s; run sculpt-setup %s", bench, root, bench)
 	}
 	return tasks, nil
 }

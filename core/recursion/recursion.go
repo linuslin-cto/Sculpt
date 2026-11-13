@@ -473,7 +473,7 @@ func RunSequential(
 	proposeWorkers, rolloutWorkers int,
 ) *ModeResult {
 	if proposeWorkers <= 0 {
-		proposeWorkers = config.PhaseWidth // match parallel; Python HARNESS2_PHASE_WIDTH default 2
+		proposeWorkers = config.PhaseWidth // match parallel; Python SCULPT_PHASE_WIDTH default 2
 	}
 	if rolloutWorkers <= 0 {
 		rolloutWorkers = config.PhaseWidth

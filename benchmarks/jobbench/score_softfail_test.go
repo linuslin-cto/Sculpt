@@ -24,8 +24,8 @@ func TestScoreSoftFailsWithoutJudgeConfig(t *testing.T) {
 	_ = os.MkdirAll(runDir, 0o755)
 	_ = os.WriteFile(filepath.Join(runDir, "answer.txt"), []byte("delivered"), 0o644)
 
-	t.Setenv("HARNESS2_JUDGE_BASE_URL", "")
-	t.Setenv("HARNESS2_JUDGE_API_KEY", "")
+	t.Setenv("SCULPT_JUDGE_BASE_URL", "")
+	t.Setenv("SCULPT_JUDGE_API_KEY", "")
 	got, err := a.Score(runDir, "acct/task1")
 	if err != nil {
 		t.Fatal(err)

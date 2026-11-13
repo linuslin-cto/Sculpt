@@ -1,12 +1,22 @@
 # Sculpt
 
-Go rewrite of [google-research/harness2](https://github.com/google-research/harness2): recursive agent harnessing for an open world.
+Go framework for **recursive agent harnessing**: refine the system around a
+fixed-weight model (prompts, tools, memory, scripts) through
+**Propose–Probe–Compose**, then persist adopted harnesses and lessons for the
+next task.
 
-Python reference: [google-research/harness2](https://github.com/google-research/harness2) (optional local checkout at `./harness2`).
+Inspired by the method in [Harness²](https://github.com/google-research/harness2)
+([paper](https://arxiv.org/pdf/2610.14224)). Sculpt is a separate Go project —
+binaries, env vars, and packages use the `sculpt` / `SCULPT_*` names.
 
 ## Status
 
-Offline demo and core method (tree, ledger, recursion, selection, schedule, library, judge) are green, including resume / selection-failure / rejudge-merge parity. CLI stubs cover dry-run sweep, judge, and report. JobBench stages Execute/Score with isolation + trajectories; LAB/WorkBuddy have discovery, BaseHarness materialisation, cached Score, Delivered, and Trajectory rendering. Live Execute runners still need OpenCode/Codex checkouts and credentials.
+Offline demo and core method (tree, ledger, recursion, selection, schedule,
+library, judge) are green, including resume / selection-failure / rejudge-merge.
+Self-evolution is checked by `TestSelfEvolutionProposeProbeCompose`: buggy base
+→ correct signed totals after one PPC step, with library persistence.
+CLI covers dry-run sweep, judge, and report. JobBench / LAB / WorkBuddy adapters
+are wired; live Execute still needs OpenCode/Codex checkouts and credentials.
 
 ## Requirements
 
@@ -17,31 +27,25 @@ Offline demo and core method (tree, ledger, recursion, selection, schedule, libr
 
 ```bash
 go test ./...
-go run ./cmd/harness2-demo --output runs/demo --k 2
-go run ./cmd/harness2-demo --output runs/demo-s7 --k 1 --seed 7
-go run ./cmd/harness2 --bench demo --output runs/demo --k 1 --seed 7 --dry-run
-go run ./cmd/harness2-judge --bench demo --output runs/demo --k 1 --modes parallel
-go run ./cmd/harness2-report --bench demo --output runs/demo --k 1
-go run ./cmd/harness2-check --bench demo --output runs/check-demo
+go run ./cmd/sculpt-demo --output runs/demo --k 2
+go run ./cmd/sculpt-demo --output runs/demo-s7 --k 1 --seed 7
+go run ./cmd/sculpt --bench demo --output runs/demo --k 1 --seed 7 --dry-run
+go run ./cmd/sculpt-judge --bench demo --output runs/demo --k 1 --modes parallel
+go run ./cmd/sculpt-report --bench demo --output runs/demo --k 1
+go run ./cmd/sculpt-check --bench demo --output runs/check-demo
 ```
 
 ### Preflight
 
 ```bash
-# Offline demo readiness (no model binaries required)
-go run ./cmd/harness2-check --bench demo --output runs/check-demo
-
-# Benchmark adapter gaps (dataset / base harness / discovery)
-go run ./cmd/harness2-check --bench jb --substrate oc --output runs/check-jb
-go run ./cmd/harness2-check --bench lab --substrate cx
-go run ./cmd/harness2-check --bench wb --substrate oc
-
-# Also verify OpenCode/Codex binaries are present
-go run ./cmd/harness2-check --bench demo --live --output runs/check-demo
-go run ./cmd/harness2-check --bench jb --substrate oc --live --output runs/check-jb
+go run ./cmd/sculpt-check --bench demo --output runs/check-demo
+go run ./cmd/sculpt-check --bench jb --substrate oc --output runs/check-jb
+go run ./cmd/sculpt-check --bench lab --substrate cx
+go run ./cmd/sculpt-check --bench wb --substrate oc
+go run ./cmd/sculpt-check --bench demo --live --output runs/check-demo
 ```
 
-Concurrency for propose/rollout phases defaults to `HARNESS2_PHASE_WIDTH=2` (Python parity).
+Concurrency for propose/rollout phases defaults to `SCULPT_PHASE_WIDTH=2`.
 
 ## Layout
 
@@ -57,8 +61,20 @@ Concurrency for propose/rollout phases defaults to `HARNESS2_PHASE_WIDTH=2` (Pyt
 | `demo` | deterministic local adapter/proposer |
 | `benchmarks/{jobbench,lab,workbuddy,tasks}` | bench adapters + discovery |
 | `substrate` | OpenCode / Codex surface specs |
-| `harness2/` | upstream Python reference (not part of the Go module) |
+| `cmd/sculpt*` | CLI entrypoints |
 
-## Parity
+## Self-evolution check
 
-Offline demo mirrors Python `harness2-demo`: Propose–Probe–Compose, R/P ledgers, resume, leak filtering, library prefix transfer, and judge merge on failed rejudge. CLI stubs: `harness2 --dry-run`, `harness2-judge`, `harness2-report`. Bench adapters: JobBench Execute/Score/isolation/trajectories; LAB/WorkBuddy Score + Trajectory (+ WorkBuddy Delivered/killed soft-fail). Remaining gaps are mostly live Execute runners, LAB nested deliverables fixtures, and full live sweeps.
+The offline demo is the same evaluation shape as the upstream paper demo:
+
+1. **Base fails** — positive-only `scripts/summarize.py` omits credits.
+2. **Task-level PPC** — propose edits, probe on the same ledger, compose a fix
+   without reading `reference_answer.txt`.
+3. **Harnessing-level** — adopted harness + experience land in `library/` and
+   transfer to the next task in the domain stream.
+
+`go test ./demo -run TestSelfEvolution` asserts all three.
+
+## License
+
+Apache-2.0

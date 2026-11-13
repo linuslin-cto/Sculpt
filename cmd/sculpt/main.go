@@ -78,13 +78,13 @@ func main() {
 		fmt.Fprintln(os.Stderr, `error: live sweeps are not wired yet (model-backed jb/lab/wb).
 
   Preview the seeded stream (no rollouts):
-    harness2 --bench demo --output runs/demo --k 1 --seed 7 --dry-run
+    sculpt --bench demo --output runs/demo --k 1 --seed 7 --dry-run
 
   Offline Propose–Probe–Compose demo:
-    harness2-demo --output runs/demo --k 2
+    sculpt-demo --output runs/demo --k 2
 
   Readiness (dataset / binaries):
-    harness2-check --bench demo --output runs/check-demo`)
+    sculpt-check --bench demo --output runs/check-demo`)
 		os.Exit(2)
 	}
 

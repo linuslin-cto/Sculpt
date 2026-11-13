@@ -18,8 +18,9 @@ __pycache__/
 # Local run outputs
 /runs/
 
-# Local Python reference checkout (use upstream: google-research/harness2)
+# Optional local upstream checkouts (not part of the Go module)
 /harness2/
+/upstream/
 
 # IDE / OS
 .idea/

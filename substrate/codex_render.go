@@ -39,7 +39,7 @@ func RenderCodexEvents(path string, obsTrunc, maxChars, argsTrunc int) string {
 		if et == "turn.completed" {
 			if usage, ok := ev["usage"].(map[string]any); ok {
 				lines = append(lines, fmt.Sprintf(
-					"[HARNESS] turn completed | tokens in=%v cached=%v out=%v reasoning=%v",
+					"[SCULPT] turn completed | tokens in=%v cached=%v out=%v reasoning=%v",
 					usage["input_tokens"], usage["cached_input_tokens"],
 					usage["output_tokens"], usage["reasoning_output_tokens"],
 				))
@@ -108,7 +108,7 @@ func renderCodexItem(item map[string]any, lines *[]string, obsTrunc, argsTrunc i
 			*lines = append(*lines, "[REASONING] "+clip(txt, obsTrunc))
 		}
 	case "error":
-		*lines = append(*lines, "[HARNESS] "+clip(fmt.Sprint(item["message"]), 1000))
+		*lines = append(*lines, "[SCULPT] "+clip(fmt.Sprint(item["message"]), 1000))
 	}
 }
 

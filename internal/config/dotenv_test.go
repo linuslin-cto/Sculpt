@@ -11,12 +11,12 @@ import (
 func TestLoadDotEnvPreservesShellPrecedence(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, ".env")
-	if err := os.WriteFile(path, []byte("HARNESS2_TEST_DOTENV=from-file\n"), 0o644); err != nil {
+	if err := os.WriteFile(path, []byte("SCULPT_TEST_DOTENV=from-file\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv("HARNESS2_TEST_DOTENV", "from-shell")
+	t.Setenv("SCULPT_TEST_DOTENV", "from-shell")
 	config.LoadDotEnv(path)
-	if got := os.Getenv("HARNESS2_TEST_DOTENV"); got != "from-shell" {
+	if got := os.Getenv("SCULPT_TEST_DOTENV"); got != "from-shell" {
 		t.Fatalf("shell should win: got %q", got)
 	}
 }
@@ -24,13 +24,13 @@ func TestLoadDotEnvPreservesShellPrecedence(t *testing.T) {
 func TestLoadDotEnvFillsUnsetKeys(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, ".env")
-	if err := os.WriteFile(path, []byte("HARNESS2_TEST_DOTENV_UNSET=from-file\n"), 0o644); err != nil {
+	if err := os.WriteFile(path, []byte("SCULPT_TEST_DOTENV_UNSET=from-file\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	_ = os.Unsetenv("HARNESS2_TEST_DOTENV_UNSET")
+	_ = os.Unsetenv("SCULPT_TEST_DOTENV_UNSET")
 	config.LoadDotEnv(path)
-	if got := os.Getenv("HARNESS2_TEST_DOTENV_UNSET"); got != "from-file" {
+	if got := os.Getenv("SCULPT_TEST_DOTENV_UNSET"); got != "from-file" {
 		t.Fatalf("unset key should load from file: got %q", got)
 	}
-	_ = os.Unsetenv("HARNESS2_TEST_DOTENV_UNSET")
+	_ = os.Unsetenv("SCULPT_TEST_DOTENV_UNSET")
 }

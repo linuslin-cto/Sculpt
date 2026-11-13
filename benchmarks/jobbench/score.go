@@ -73,7 +73,7 @@ func (a *Adapter) runJudge(taskID, label, runDir, detailsPath string) bool {
 	}
 	apiBase := config.JbJudgeAPIBase()
 	if apiBase == "" {
-		fmt.Printf("  [jb] HARNESS2_JUDGE_BASE_URL empty; judge not run\n")
+		fmt.Printf("  [jb] SCULPT_JUDGE_BASE_URL empty; judge not run\n")
 		return false
 	}
 	token := config.JbJudgeAPIKey()
@@ -101,7 +101,7 @@ func (a *Adapter) runJudge(taskID, label, runDir, detailsPath string) bool {
 		"SYSTEMROOT", "COMSPEC", "LANG", "LC_ALL", "TZ", "CLOUDSDK_CONFIG",
 	}),
 		"JUDGE_API_KEY="+token,
-		"JUDGE_REASONING_EFFORT="+os.Getenv("HARNESS2_JUDGE_REASONING_EFFORT"),
+		"JUDGE_REASONING_EFFORT="+os.Getenv("SCULPT_JUDGE_REASONING_EFFORT"),
 		"VERTEXAI_LOCATION="+os.Getenv("VERTEXAI_LOCATION"),
 	)
 	out, err := cmd.CombinedOutput()
@@ -135,7 +135,7 @@ func (a *Adapter) detailsCandidates(taskID, label string) (*string, string) {
 	}
 	safe = strings.ReplaceAll(safe, ".", "-")
 	own := filepath.Join(er, "eval_"+label, safe+"_judge.json")
-	pattern := os.Getenv("HARNESS2_JB_REPORTING_JUDGE_DETAILS")
+	pattern := os.Getenv("SCULPT_JB_REPORTING_JUDGE_DETAILS")
 	if pattern == "" {
 		return nil, own
 	}

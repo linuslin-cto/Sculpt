@@ -154,7 +154,7 @@ func TestChannelResolve(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if unresolved.Model != "" && os.Getenv("HARNESS2_IMPROVER_MODEL") == "" {
+	if unresolved.Model != "" && os.Getenv("SCULPT_IMPROVER_MODEL") == "" {
 		// may be empty by default
 	}
 	_, err = spec.ResolveChannelModel(strPtr("opencode"), nil, "high", 120, 3600)

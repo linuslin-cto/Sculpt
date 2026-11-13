@@ -25,8 +25,8 @@ func TestJudgeCLIWritesMergedJudgedJSON(t *testing.T) {
 	nsDir := filepath.Join(adapter.Spec().RunsRoot, "demo-oc-agg1")
 
 	modRoot := findModuleRoot(t)
-	bin := filepath.Join(t.TempDir(), "harness2-judge"+exeSuffix())
-	build := exec.Command("go", "build", "-o", bin, "./cmd/harness2-judge")
+	bin := filepath.Join(t.TempDir(), "sculpt-judge"+exeSuffix())
+	build := exec.Command("go", "build", "-o", bin, "./cmd/sculpt-judge")
 	build.Dir = modRoot
 	if out, err := build.CombinedOutput(); err != nil {
 		t.Fatalf("build: %v\n%s", err, out)

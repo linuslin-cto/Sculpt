@@ -1,11 +1,16 @@
-# Harness² Go API contract (from Python)
+# Sculpt API contract
 
-Source: exploration of `harness2` for the Go rewrite. Critical invariants:
+Critical invariants for the Go framework (aligned with the Harness² method):
 
-1. Three seams: method / substrate / benchmark — **no scores in the method path**.
-2. Budget: `R=4k`, `P=3k`, unique labels after every mode.
-3. Stage retry: write rejected tree back into `context/harness/` before attempt 2.
-4. Selection: finals-only pool; seeded anon shuffle; fallback never panics; judge only after.
-5. Resume: inputs fingerprint + harness fingerprint + intact deliverable.
-6. Leak tripwires: `leak_globs` + grader-verdict markers before model context.
-7. Library: require `cue`+`lesson`+`evidence`; per-mode roots; retain stream prefix.
+1. **Budget identity** — each mode runs with `R = 4k` rollouts and `P = 3k`
+   improver sessions per task.
+2. **Propose–Probe–Compose** — candidates are probed on the same task; selection
+   is blind to ground truth (leak globs filtered from context).
+3. **Adoption** — chosen harness is materialised under `harnesses/<label>/` and
+   recorded in `reflection/*/adoption.json`.
+4. **Library** — successful experience is stored per domain/mode and prefixed
+   into later tasks in the stream.
+5. **Resume** — completed summaries are cache hits unless adopted artifacts are
+   corrupted or modes are re-requested.
+6. **Env** — deployment knobs use `SCULPT_*` (for example `SCULPT_PHASE_WIDTH`,
+   `SCULPT_IMPROVER_MODEL`, `SCULPT_RUNS_DIR`).

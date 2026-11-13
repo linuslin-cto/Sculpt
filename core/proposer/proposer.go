@@ -53,7 +53,7 @@ type Base struct {
 // New constructs a Base proposer; empty model is rejected (matches Python).
 func New(ch spec.ChannelSpec, auditDir string, attempts int) (*Base, error) {
 	if strings.TrimSpace(ch.Model) == "" {
-		return nil, fmt.Errorf("Set HARNESS2_IMPROVER_MODEL before starting model sessions")
+		return nil, fmt.Errorf("Set SCULPT_IMPROVER_MODEL before starting model sessions")
 	}
 	if attempts <= 0 {
 		attempts = 2

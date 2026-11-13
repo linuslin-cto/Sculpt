@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"sculpt/benchmarks/jobbench"
+	"sculpt/internal/config"
 )
 
 func TestScoreCachedDetails(t *testing.T) {
@@ -30,7 +31,7 @@ func TestScoreCachedDetails(t *testing.T) {
 	b, _ := json.Marshal(doc)
 	_ = os.WriteFile(details, b, 0o644)
 
-	t.Setenv("HARNESS2_JUDGE_MODEL", "judge/stub")
+	t.Setenv("SCULPT_JUDGE_MODEL", "judge/stub")
 	got, err := a.Score(runDir, "acct/task1")
 	if err != nil {
 		t.Fatal(err)
@@ -70,9 +71,5 @@ func TestScoreNoOutputFromRubrics(t *testing.T) {
 
 func TestJbOpenCodeRunnerResolvable(t *testing.T) {
 	// Presence of the reference runner is enough for the live path to be selectable.
-	if _, err := os.Stat(filepath.Join("..", "..", "harness2", "harness2", "benchmarks", "jb_opencode_runner.py")); err != nil {
-		// Workspace layout may differ when tests run from module root via go test.
-		wd, _ := os.Getwd()
-		_ = wd
-	}
+	_ = config.JbOpenCodeRunner() // resolvable path even when optional runner is absent
 }

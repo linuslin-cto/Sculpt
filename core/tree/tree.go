@@ -459,7 +459,7 @@ func checkPythonCompiles(rel, src string) string {
 	if strings.TrimSpace(src) == "" {
 		return fmt.Sprintf("%s does not compile: empty script", rel)
 	}
-	// Prefer the real Python compiler when available (parity with harness2).
+	// Prefer the real Python compiler when available.
 	for _, bin := range []string{"python", "python3", "py"} {
 		args := []string{"-c", "import sys; compile(sys.stdin.read(), sys.argv[1], 'exec')", rel}
 		if bin == "py" {

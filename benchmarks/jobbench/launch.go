@@ -33,7 +33,7 @@ func (a *Adapter) defaultLaunch(req substrate.RunRequest, install substrate.Inst
 func (a *Adapter) launchOpenCodeRunner(req substrate.RunRequest, install substrate.Install) ([]string, error) {
 	runner := config.JbOpenCodeRunner()
 	if fi, err := os.Stat(runner); err != nil || fi.IsDir() {
-		return nil, fmt.Errorf("jobbench: jb_opencode_runner missing at %s (set HARNESS2_JB_OC_RUNNER)", runner)
+		return nil, fmt.Errorf("jobbench: jb_opencode_runner missing at %s (set SCULPT_JB_OC_RUNNER)", runner)
 	}
 	py, err := findPython()
 	if err != nil {
@@ -58,11 +58,13 @@ func (a *Adapter) launchOpenCodeRunner(req substrate.RunRequest, install substra
 	}
 	model := config.SolverModelOC()
 	if model == "" {
-		return nil, fmt.Errorf("jobbench: set HARNESS2_SOLVER_MODEL before live OpenCode rollouts")
+		return nil, fmt.Errorf("jobbench: set SCULPT_SOLVER_MODEL before live OpenCode rollouts")
 	}
 	env := append(os.Environ(),
 		"TASK_IDS="+taskID,
 		"LABEL="+label,
+		"SCULPT_RENDER_DIR="+render,
+		// Upstream Python runners still read this name.
 		"HARNESS_RENDER_DIR="+render,
 		"AGENT_NAME=",
 		"TASKS_BASE_DIR="+a.Store,
@@ -94,7 +96,7 @@ func (a *Adapter) launchOpenCodeRunner(req substrate.RunRequest, install substra
 func (a *Adapter) launchCodexRunner(req substrate.RunRequest, install substrate.Install) ([]string, error) {
 	runner := config.JbCodexRunner()
 	if fi, err := os.Stat(runner); err != nil || fi.IsDir() {
-		return nil, fmt.Errorf("jobbench: Codex runner missing at %s (set HARNESS2_JB_CX_RUNNER)", runner)
+		return nil, fmt.Errorf("jobbench: Codex runner missing at %s (set SCULPT_JB_CX_RUNNER)", runner)
 	}
 	if err := (substrate.Codex{}).Preflight(); err != nil {
 		return nil, err
@@ -111,18 +113,21 @@ func (a *Adapter) launchCodexRunner(req substrate.RunRequest, install substrate.
 	}
 	model := config.SolverModelCX()
 	if model == "" {
-		return nil, fmt.Errorf("jobbench: set HARNESS2_SOLVER_MODEL_CX (or HARNESS2_SOLVER_MODEL) before Codex rollouts")
+		return nil, fmt.Errorf("jobbench: set SCULPT_SOLVER_MODEL_CX (or SCULPT_SOLVER_MODEL) before Codex rollouts")
 	}
 	codexHome := config.CodexHome()
 	env := append(os.Environ(),
 		"TASK_IDS="+taskID,
 		"LABEL="+label,
+		"SCULPT_RENDER_DIR="+render,
+		// Upstream Python runners still read this name.
 		"HARNESS_RENDER_DIR="+render,
 		"TASKS_BASE_DIR="+a.Store,
 		"BENCHMARK_MODELS="+model,
 		"MAX_CONCURRENT_PER_MODEL=1",
 		"TIMEOUT_PER_TASK="+fmt.Sprintf("%d", wall),
 		"CODEX_HOME="+codexHome,
+		"SCULPT_CODEX_BIN="+filepath.Join(config.CodexDist(), "codex"),
 		"HARNESS2_CODEX_BIN="+filepath.Join(config.CodexDist(), "codex"),
 	)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(wall+600)*time.Second)

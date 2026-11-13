@@ -11,12 +11,12 @@ import (
 func TestScrubEnvDropsSecrets(t *testing.T) {
 	t.Setenv("OPENAI_API_KEY", "sk-secret")
 	t.Setenv("ANTHROPIC_API_KEY", "ant-secret")
-	t.Setenv("HARNESS2_JUDGE_API_KEY", "judge-secret")
+	t.Setenv("SCULPT_JUDGE_API_KEY", "judge-secret")
 	t.Setenv("PATH", os.Getenv("PATH"))
 
 	scrubbed := config.ScrubEnv([]string{"PATH"})
 	joined := strings.Join(scrubbed, "\n")
-	for _, bad := range []string{"sk-secret", "ant-secret", "judge-secret", "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "HARNESS2_JUDGE_API_KEY"} {
+	for _, bad := range []string{"sk-secret", "ant-secret", "judge-secret", "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "SCULPT_JUDGE_API_KEY"} {
 		if strings.Contains(joined, bad) {
 			t.Fatalf("scrub leaked %q in %q", bad, joined)
 		}

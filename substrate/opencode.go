@@ -79,12 +79,12 @@ func (Opencode) Preflight() error {
 	bun := config.Bun
 	if filepath.IsAbs(bun) {
 		if fi, err := os.Stat(bun); err != nil || fi.IsDir() {
-			return fmt.Errorf("bun binary missing at %s (set HARNESS2_BUN)", bun)
+			return fmt.Errorf("bun binary missing at %s (set SCULPT_BUN)", bun)
 		}
 		return nil
 	}
 	if _, err := exec.LookPath(bun); err != nil {
-		return fmt.Errorf("bun not on PATH (set HARNESS2_BUN): %w", err)
+		return fmt.Errorf("bun not on PATH (set SCULPT_BUN): %w", err)
 	}
 	return nil
 }
