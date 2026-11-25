@@ -84,7 +84,8 @@ func OpenCodeSessionEnv(cwd string, extra []string) []string {
 		"PATH", "HOME", "USERPROFILE", "HOMEDRIVE", "HOMEPATH", "TEMP", "TMP",
 		"SYSTEMROOT", "COMSPEC", "LANG", "LC_ALL", "TZ",
 		"OPENAI_API_KEY", "ANTHROPIC_API_KEY", "OPENROUTER_API_KEY",
-		"GOOGLE_API_KEY", "XAI_API_KEY",
+		"GOOGLE_API_KEY", "XAI_API_KEY", "DEEPSEEK_API_KEY",
+		"OPENAI_BASE_URL", "OPENAI_API_BASE",
 	}
 	env := config.ScrubEnv(keep)
 	env = append(env,

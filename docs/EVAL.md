@@ -1,5 +1,7 @@
 # Evaluation and self-evolution scoring
 
+[English](EVAL.md) · [简体中文](EVAL.zh-CN.md)
+
 Sculpt follows the upstream experiment pipeline:
 
 1. **Refine** — `sculpt-demo` / `sculpt` runs Propose–Probe–Compose and writes

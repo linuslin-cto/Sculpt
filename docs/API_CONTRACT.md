@@ -1,5 +1,7 @@
 # Sculpt API contract
 
+[English](API_CONTRACT.md) · [简体中文](API_CONTRACT.zh-CN.md)
+
 Critical invariants for the Go framework (aligned with the recursive harnessing method):
 
 1. **Budget identity** — each mode runs with `R = 4k` rollouts and `P = 3k`

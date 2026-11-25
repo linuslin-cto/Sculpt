@@ -28,3 +28,7 @@ __pycache__/
 *.swp
 .DS_Store
 Thumbs.db
+
+# Local dependency checkouts
+/dependencies/
+
