@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Sculpt-재귀적%20에이전트%20하네싱-0F766E?style=for-the-badge" alt="Sculpt" />
+  <img src="https://img.shields.io/badge/Sculpt-%EC%9E%AC%EA%B7%80%EC%A0%81%20%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%20%ED%95%98%EB%84%A4%EC%8B%B1-0F766E?style=for-the-badge" alt="Sculpt" />
 </p>
 
 <h1 align="center">Sculpt</h1>

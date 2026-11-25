@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Sculpt-Arnés%20recursivo%20de%20agentes-0F766E?style=for-the-badge" alt="Sculpt" />
+  <img src="https://img.shields.io/badge/Sculpt-Arn%C3%A9s%20recursivo%20de%20agentes-0F766E?style=for-the-badge" alt="Sculpt" />
 </p>
 
 <h1 align="center">Sculpt</h1>

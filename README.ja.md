@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Sculpt-再帰的エージェント・ハーネス化-0F766E?style=for-the-badge" alt="Sculpt" />
+  <img src="https://img.shields.io/badge/Sculpt-%E5%86%8D%E5%B8%B0%E7%9A%84%E3%82%A8%E3%83%BC%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88%E3%83%BB%E3%83%8F%E3%83%BC%E3%83%8D%E3%82%B9%E5%8C%96-0F766E?style=for-the-badge" alt="Sculpt" />
 </p>
 
 <h1 align="center">Sculpt</h1>

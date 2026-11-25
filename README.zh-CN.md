@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Sculpt-递归智能体装具化-0F766E?style=for-the-badge" alt="Sculpt" />
+  <img src="https://img.shields.io/badge/Sculpt-%E9%80%92%E5%BD%92%E6%99%BA%E8%83%BD%E4%BD%93%E8%A3%85%E5%85%B7%E5%8C%96-0F766E?style=for-the-badge" alt="Sculpt" />
 </p>
 
 <h1 align="center">Sculpt</h1>
