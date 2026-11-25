@@ -32,3 +32,8 @@ Thumbs.db
 # Local dependency checkouts
 /dependencies/
 
+# Large local paper binaries (Markdown summaries are committed)
+docs/papers/*.pdf
+docs/papers/pdf-zh.css
+docs/papers/md_to_pdf_zh.py
+
