@@ -22,6 +22,9 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/linuslin-cto/Sculpt/stargazers"><img src="https://img.shields.io/github/stars/linuslin-cto/Sculpt?style=social" alt="Stars" /></a>
+  <a href="https://github.com/linuslin-cto/Sculpt/network/members"><img src="https://img.shields.io/github/forks/linuslin-cto/Sculpt?style=social" alt="Forks" /></a>
+  &nbsp;
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-34A853?logo=apache&logoColor=white" alt="License" /></a>
   <a href="https://go.dev/"><img src="https://img.shields.io/badge/go-1.22+-00ADD8?logo=go&logoColor=white" alt="Go" /></a>
   <a href="https://arxiv.org/abs/2610.14224"><img src="https://img.shields.io/badge/method-arXiv%3A2610.14224-EA4335?logo=arxiv&logoColor=white" alt="Paper" /></a>
@@ -57,6 +60,14 @@
 > 오프라인 계약(검증됨): **base 0% → refined 100% (+100 pt)**, 결정적 100/100.
 > Live DeepSeek 수리 스모크: 동일 Δ 계약에서 **100/100**.
 
+### 헤드라인 결과
+
+| 신호 | 값 |
+|------|-----|
+| 오프라인 자기 진화(결정적) | **base 0% → refined 100% (+100 pt)** · 100/100 |
+| Live DeepSeek 수리 스모크 | 동일 Δ 계약에서 **100/100** |
+| 방법 논문 피크(정성) | WorkBuddy **+11.5** · JobBench **+4.5** · LAB partial **+11.8 pp** |
+
 ## 왜 Sculpt인가
 
 - **가중치 동결** — 이득은 모두 모델 주변에서 옵니다.
@@ -89,6 +100,21 @@ flowchart LR
 
   Q["과제 qₜ"] --> EXE
   Hstar --> OUT["산출물 + summary.json"]
+```
+
+### 병렬은 넓게 · 순차는 깊게
+
+```mermaid
+flowchart TB
+  subgraph Par["병렬 · agg"]
+    P1["K general + K domain candidates"] --> P2["Probe on same task"]
+    P2 --> P3["Compose from contrasts"]
+  end
+  subgraph Seq["순차 · seq"]
+    S1["PPC step 1"] --> S2["PPC step 2"]
+    S2 --> S3["… through K"]
+  end
+  Par --- Seq
 ```
 
 ### 패키지 맵

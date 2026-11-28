@@ -22,6 +22,9 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/linuslin-cto/Sculpt/stargazers"><img src="https://img.shields.io/github/stars/linuslin-cto/Sculpt?style=social" alt="Stars" /></a>
+  <a href="https://github.com/linuslin-cto/Sculpt/network/members"><img src="https://img.shields.io/github/forks/linuslin-cto/Sculpt?style=social" alt="Forks" /></a>
+  &nbsp;
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-34A853?logo=apache&logoColor=white" alt="License" /></a>
   <a href="https://go.dev/"><img src="https://img.shields.io/badge/go-1.22+-00ADD8?logo=go&logoColor=white" alt="Go" /></a>
   <a href="https://arxiv.org/abs/2610.14224"><img src="https://img.shields.io/badge/method-arXiv%3A2610.14224-EA4335?logo=arxiv&logoColor=white" alt="Paper" /></a>
@@ -57,6 +60,14 @@
 > オフライン契約（検証済）：**base 0% → refined 100%（+100 pt）**、決定的 100/100。
 > Live DeepSeek 修復スモーク：同じ Δ 契約で **100/100**。
 
+### ヘッドライン結果
+
+| シグナル | 値 |
+|----------|-----|
+| オフライン自己進化（決定的） | **base 0% → refined 100%（+100 pt）** · 100/100 |
+| Live DeepSeek 修復スモーク | 同じ Δ 契約で **100/100** |
+| 方法論文ピーク（定性） | WorkBuddy **+11.5** · JobBench **+4.5** · LAB partial **+11.8 pp** |
+
 ## なぜ Sculpt か
 
 - **重みは凍結** — 改善はすべてモデル周囲から。
@@ -89,6 +100,21 @@ flowchart LR
 
   Q["タスク qₜ"] --> EXE
   Hstar --> OUT["成果物 + summary.json"]
+```
+
+### 並列は広く · 直列は深く
+
+```mermaid
+flowchart TB
+  subgraph Par["並列 · agg"]
+    P1["K general + K domain candidates"] --> P2["Probe on same task"]
+    P2 --> P3["Compose from contrasts"]
+  end
+  subgraph Seq["直列 · seq"]
+    S1["PPC step 1"] --> S2["PPC step 2"]
+    S2 --> S3["… through K"]
+  end
+  Par --- Seq
 ```
 
 ### パッケージマップ

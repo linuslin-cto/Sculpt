@@ -22,6 +22,9 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/linuslin-cto/Sculpt/stargazers"><img src="https://img.shields.io/github/stars/linuslin-cto/Sculpt?style=social" alt="Stars" /></a>
+  <a href="https://github.com/linuslin-cto/Sculpt/network/members"><img src="https://img.shields.io/github/forks/linuslin-cto/Sculpt?style=social" alt="Forks" /></a>
+  &nbsp;
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-34A853?logo=apache&logoColor=white" alt="License" /></a>
   <a href="https://go.dev/"><img src="https://img.shields.io/badge/go-1.22+-00ADD8?logo=go&logoColor=white" alt="Go" /></a>
   <a href="https://arxiv.org/abs/2610.14224"><img src="https://img.shields.io/badge/method-arXiv%3A2610.14224-EA4335?logo=arxiv&logoColor=white" alt="Paper" /></a>
@@ -58,6 +61,14 @@ e melhora o harness com dois loops aninhados — o mesmo método de
 > Contrato offline (verificado): **base 0% → refined 100% (+100 pt)** em 100/100 rodadas determinísticas.
 > Smoke de reparo Live DeepSeek: **100/100** no mesmo contrato Δ.
 
+### Resultados em destaque
+
+| Sinal | Valor |
+|-------|-------|
+| Autoevolução offline (determinística) | **base 0% → refined 100% (+100 pt)** · 100/100 |
+| Smoke Live DeepSeek | **100/100** no mesmo contrato Δ |
+| Picos do paper (qualitativos) | WorkBuddy **+11.5** · JobBench **+4.5** · LAB partial **+11.8 pp** |
+
 ## Por que Sculpt
 
 - **Pesos congelados** — todos os ganhos vêm do sistema ao redor do modelo.
@@ -90,6 +101,21 @@ flowchart LR
 
   Q["Tarefa qₜ"] --> EXE
   Hstar --> OUT["Entregável + summary.json"]
+```
+
+### Paralelo explora · sequencial aprofunda
+
+```mermaid
+flowchart TB
+  subgraph Par["Paralelo · agg"]
+    P1["K general + K domain candidates"] --> P2["Probe on same task"]
+    P2 --> P3["Compose from contrasts"]
+  end
+  subgraph Seq["Sequencial · seq"]
+    S1["PPC step 1"] --> S2["PPC step 2"]
+    S2 --> S3["… through K"]
+  end
+  Par --- Seq
 ```
 
 ### Mapa de pacotes

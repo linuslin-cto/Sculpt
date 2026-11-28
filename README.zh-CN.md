@@ -5,8 +5,8 @@
 <h1 align="center">Sculpt</h1>
 
 <p align="center">
-  <b>Go 实现的递归智能体装具化</b><br/>
-  精炼模型<strong>外围</strong>的系统 —— 并记住什么真正有效。
+  <b>雕琢装具，冻结权重。</b><br/>
+  Go 实现的<i>递归智能体装具化</i> —— 改进模型外围的系统，并记住什么真正有效。
 </p>
 
 <p align="center">
@@ -22,11 +22,13 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/linuslin-cto/Sculpt/stargazers"><img src="https://img.shields.io/github/stars/linuslin-cto/Sculpt?style=social" alt="Stars" /></a>
+  <a href="https://github.com/linuslin-cto/Sculpt/network/members"><img src="https://img.shields.io/github/forks/linuslin-cto/Sculpt?style=social" alt="Forks" /></a>
+  &nbsp;
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-34A853?logo=apache&logoColor=white" alt="License" /></a>
   <a href="https://go.dev/"><img src="https://img.shields.io/badge/go-1.22+-00ADD8?logo=go&logoColor=white" alt="Go" /></a>
   <a href="https://arxiv.org/abs/2610.14224"><img src="https://img.shields.io/badge/method-arXiv%3A2610.14224-EA4335?logo=arxiv&logoColor=white" alt="Paper" /></a>
-  <a href="docs/EVAL.zh-CN.md"><img src="https://img.shields.io/badge/评测-base%20→%20refined%20Δ-FBBC04" alt="Eval" /></a>
-  <a href="#自进化"><img src="https://img.shields.io/badge/demo-+100%20pt%20离线-brightgreen" alt="Self-evolution" /></a>
+  <a href="#实证"><img src="https://img.shields.io/badge/offline%20Δ-%2B100%20pt-brightgreen" alt="Offline delta" /></a>
 </p>
 
 <p align="center">
@@ -34,41 +36,49 @@
   &nbsp;·&nbsp;
   <code>go run ./cmd/sculpt-demo --k 2</code>
   &nbsp;·&nbsp;
-  <b>离线闭环无需 API Key</b>
+  <b>离线闭环 · 无需 API Key</b>
 </p>
 
 ---
+
+> **一句话：** 权重不动。每道任务用 **提出 → 探测 → 组合** 雕出更好装具，再把证据折进领域 **library**，指导下一次。
 
 **装具（harness）** 是包在模型外面、让它能充当智能体的那一整套系统：
 提示词、工具、记忆、技能、脚本、编排……
 
 **装具化（harnessing）** 是在**不改模型权重**的前提下，优化这套外围系统。
 
-**Sculpt** 是面向开放世界的 Go 框架：智能体会遇到装具设计时未见过的任务。
-它固定权重，用两层递归改进装具 —— 方法与
-[Harness²](https://github.com/google-research/harness2)
-（[论文](https://arxiv.org/abs/2610.14224)）一致。
+**Sculpt** 把 [Harness²](https://github.com/google-research/harness2) 风格的
+**递归智能体装具化**（[论文](https://arxiv.org/abs/2610.14224)）落到 Go：
+类型化缝合面、快速测试、可续跑 CLI，以及可度量的基线 → 精炼 **Δ**。
 
-| | |
-|---|---|
-| **任务级** | 对比式 **提出 → 探测 → 组合（Propose–Probe–Compose）**：编辑装具、在同一任务上探测、从行为对比中组合 —— 改进环路**不依赖真值反馈**。 |
-| **装具化级** | 将被采纳装具与有证据支持的经验写入按领域划分的 **library**，指导后续任务。 |
+| 层级 | 发生什么 |
+|------|----------|
+| **任务级** | 同一任务上对比式 **提出 → 探测 → 组合** —— 改进环路**不见真值** |
+| **装具化级** | 将被采纳装具与有证据的经验写入按领域划分的 **library**，指导后续任务 |
 
-> 离线约定（已验证）：**基线 0% → 精炼 100%（+100 pt）**，确定性 100/100。
-> Live DeepSeek 修复冒烟：同样 Δ 约定下 **100/100**。
+### 头条结果
+
+| 信号 | 数值 |
+|------|------|
+| 离线自进化（确定性） | **基线 0% → 精炼 100%（+100 pt）** · 100/100 |
+| Live DeepSeek 修复冒烟 | 同 Δ 约定下 **100/100** |
+| 方法论文峰值（定性） | WorkBuddy **+11.5** · JobBench **+4.5** · LAB Partial **+11.8 pp** |
 
 ## 为什么选 Sculpt
 
-- **权重冻结** —— 增益全部来自模型外围系统。
-- **改进器不见阅卷器** —— 选择对真值盲视，避免泄漏。
-- **Go 原生** —— 类型化缝合面、快速测试、单二进制 CLI。
-- **并行 + 串行** 递归（`agg` / `seq`），预算显式为 `R=4k` / `P=3k`。
-- **可测的自进化** —— 分别评判基线与精炼结果，报告百分点 Δ。
-- **基准适配器就绪** —— JobBench、LAB、WorkBuddy-Bench（及离线 demo）。
+| | |
+|---|---|
+| **权重冻结** | 增益全部来自模型*外围*系统 |
+| **盲选** | 改进器不见阅卷器 —— 无真值泄漏 |
+| **Go 原生** | `BenchmarkAdapter` 缝合面、单二进制 CLI、秒级测试 |
+| **双递归模式** | 并行（`agg`）更宽探索 · 串行（`seq`）更深精炼 |
+| **显式预算** | `R=4k` rollout · `P=3k` 改进会话 |
+| **基准就绪** | JobBench · LAB · WorkBuddy-Bench · 离线 demo |
 
 ## 架构
 
-### 流水线（任务 → 经验库）
+### 端到端流水线
 
 ```mermaid
 flowchart LR
@@ -91,6 +101,21 @@ flowchart LR
   Hstar --> OUT["交付物 + summary.json"]
 ```
 
+### 并行更宽 · 串行更深
+
+```mermaid
+flowchart TB
+  subgraph Par["并行 · agg"]
+    P1["K 通用 + K 领域候选"] --> P2["同一任务上探测"]
+    P2 --> P3["从对比中组合"]
+  end
+  subgraph Seq["串行 · seq"]
+    S1["PPC 第 1 步"] --> S2["PPC 第 2 步"]
+    S2 --> S3["… 直到 K"]
+  end
+  Par --- Seq
+```
+
 ### 包结构
 
 ```mermaid
@@ -110,7 +135,7 @@ flowchart TB
 
 ### 八个可编辑组件
 
-与方法论文一致 —— Sculpt 读写并校验的装具表面：
+Sculpt 读写并校验的装具表面（与方法论文对齐）：
 
 | 上下文 | 工具环 | 编排 |
 |--------|--------|------|
@@ -120,10 +145,10 @@ flowchart TB
 
 - [为什么选 Sculpt](#为什么选-sculpt)
 - [架构](#架构)
+- [实证](#实证)
 - [状态](#状态)
 - [安装](#安装)
 - [快速开始](#快速开始)
-- [自进化](#自进化)
 - [基准](#基准)
 - [实验](#实验)
 - [布局](#布局)
@@ -132,6 +157,26 @@ flowchart TB
 - [贡献](#贡献)
 - [许可证](#许可证)
 - [免责声明](#免责声明)
+
+## 实证
+
+评测形态对齐研究 demo：
+
+1. **基线失败** —— 只加正数的 `scripts/summarize.py` 漏掉贷方。
+2. **任务级 PPC** —— 提出 · 探测 · 组合，不读 `reference_answer.txt`。
+3. **装具化级** —— 采纳装具与经验写入 `library/`，供后续任务使用。
+
+```bash
+go test ./demo -run TestSelfEvolution
+```
+
+| 阶段 | 离线约定 |
+|------|----------|
+| 基线装具 | **0%** |
+| 一次 PPC 之后 | **100%** |
+| Δ | **+100 pt** |
+
+详见 [docs/EVAL.zh-CN.md](docs/EVAL.zh-CN.md)。
 
 ## 状态
 
@@ -154,13 +199,9 @@ cd Sculpt
 go test ./...
 ```
 
-**依赖**
+**依赖：** Go **1.22+** · `PATH` 上的 Python **3.x**（demo 跑 `scripts/summarize.py`） · 可选在线路径：OpenCode / Codex + `SCULPT_*` / 供应商密钥。
 
-- Go **1.22+**
-- `PATH` 上的 Python **3.x**（demo 执行器跑 `scripts/summarize.py`）
-- 可选在线路径：OpenCode 或 Codex、数据集、`SCULPT_*` / 供应商密钥
-
-详见 [docs/SETUP.zh-CN.md](docs/SETUP.zh-CN.md)。切勿提交密钥 —— 使用被 gitignore 的 `.env`。
+详见 [docs/SETUP.zh-CN.md](docs/SETUP.zh-CN.md)。复制 [`.env.example`](.env.example) → `.env` —— 切勿提交密钥。
 
 ## 快速开始
 
@@ -184,26 +225,6 @@ go run ./cmd/sculpt-report --bench demo --output runs/demo --k 1
 go run ./cmd/sculpt-check --bench demo --output runs/check-demo
 go run ./cmd/sculpt-check --bench jb --substrate oc --output runs/check-jb
 ```
-
-## 自进化
-
-评测形态对齐研究 demo / 实验指南：
-
-1. **基线失败** —— 只加正数的 `scripts/summarize.py` 漏掉贷方。
-2. **任务级 PPC** —— 提出 · 探测 · 组合，不读 `reference_answer.txt`。
-3. **装具化级** —— 采纳装具与经验写入 `library/`，供同领域后续任务使用。
-
-```bash
-go test ./demo -run TestSelfEvolution
-```
-
-| 阶段 | 离线约定 |
-|------|----------|
-| 基线装具 | **0%** |
-| 一次 PPC 之后 | **100%** |
-| Δ | **+100 pt** |
-
-论文在在线基准上的峰值（定性目标，非 CI 门槛）：WorkBuddy **+11.5**、JobBench **+4.5**、LAB Partial **+11.8 pp** —— 见 [docs/EVAL.zh-CN.md](docs/EVAL.zh-CN.md)。
 
 ## 基准
 
@@ -279,7 +300,7 @@ go run ./cmd/sculpt --bench jb --substrate oc --k 1 --modes parallel --dry-run
 | Deutsch | [README.de.md](README.de.md) |
 | Português (BR) | [README.pt-BR.md](README.pt-BR.md) |
 
-贡献与术语表：[docs/i18n/README.md](docs/i18n/README.md)。
+贡献指南：[docs/i18n/README.md](docs/i18n/README.md)。
 
 **约定：** 命令、路径、flags 与 `SCULPT_*` 名称保持英文，不要翻译。
 
