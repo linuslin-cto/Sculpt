@@ -5,8 +5,8 @@
 <h1 align="center">Sculpt</h1>
 
 <p align="center">
-  <b>Rekursives Agenten-Harnessing in Go</b><br/>
-  Verfeinere das System <i>um</i> ein Modell mit festen Gewichten — und merke, was funktioniert hat.
+  <b>Forme das Harness. Friere die Gewichte.</b><br/>
+  Ein Go-Framework für <i>rekursives Agenten-Harnessing</i> — verbessere das System um das Modell und merke, was funktioniert hat.
 </p>
 
 <p align="center">

@@ -5,8 +5,8 @@
 <h1 align="center">Sculpt</h1>
 
 <p align="center">
-  <b>Harnessing recursivo de agentes em Go</b><br/>
-  Refine o sistema <i>ao redor</i> de um modelo de pesos fixos — e lembre o que funcionou.
+  <b>Esculpa o harness. Congele os pesos.</b><br/>
+  Um framework Go de <i>harnessing recursivo de agentes</i> — refine o sistema ao redor do modelo e lembre o que funcionou.
 </p>
 
 <p align="center">

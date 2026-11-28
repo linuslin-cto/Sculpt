@@ -5,8 +5,8 @@
 <h1 align="center">Sculpt</h1>
 
 <p align="center">
-  <b>Harnessing récursif d'agents en Go</b><br/>
-  Affine le système <i>autour</i> d'un modèle à poids fixes — puis mémorise ce qui a marché.
+  <b>Sculptez le harness. Gelez les poids.</b><br/>
+  Un framework Go de <i>harnessing récursif d'agents</i> — affine le système autour du modèle, puis mémorise ce qui a marché.
 </p>
 
 <p align="center">
